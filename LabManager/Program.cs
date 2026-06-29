@@ -18,6 +18,16 @@ namespace LabManager
 
             builder.Services.AddOpenApi();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Angular", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -33,6 +43,8 @@ namespace LabManager
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("Angular");
 
             app.UseAuthorization();
 

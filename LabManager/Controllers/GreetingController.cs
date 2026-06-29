@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LabManager.Services;
+using LabManager.Models;
 
 
 namespace LabManager.Controllers
@@ -12,25 +13,28 @@ namespace LabManager.Controllers
 
         public readonly GreetingService _greetingService;
 
+        public GreetingController(GreetingService greetingService)
 
-      
-     
-        [HttpGet]
-        public string GetGreeting()
-        {
-            string respuesta = _greetingService.GetGreeting();
-
-            return respuesta;
-        }
-
-
-
-        public GreetingController(GreetingService greetingService) 
-        
         {
 
             _greetingService = greetingService;
-        
+
         }
+
+
+        [HttpGet]
+        public GreetingResponse GetGreeting()
+        {
+            GreetingResponse greetingResponse = new GreetingResponse();
+
+            greetingResponse.Message = _greetingService.GetGreeting();
+
+            return greetingResponse;
+
+        }
+
+
+
+
     }
 }

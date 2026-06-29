@@ -1,5 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Greeting } from './greeting';
+
 
 @Component({
   selector: 'app-root',
@@ -9,4 +11,19 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('LabManager.Client');
+
+  private readonly greeting: Greeting;
+
+  constructor(greeting: Greeting)
+  {
+
+    this.greeting = greeting;
+
+    
+    this.greeting.GetGreeting().subscribe(saludo => 
+    { 
+      console.log(saludo);
+    });
+  }
+
 }
