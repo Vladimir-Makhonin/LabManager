@@ -1,3 +1,5 @@
+using LabManager.Services;
+
 
 namespace LabManager
 {
@@ -12,6 +14,8 @@ namespace LabManager
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
            
+            builder.Services.AddSingleton<GreetingService>();
+
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
@@ -34,6 +38,8 @@ namespace LabManager
 
 
             app.MapControllers();
+
+           
 
             app.Run();
         }
