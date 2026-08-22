@@ -1,4 +1,6 @@
 using LabManager.Services;
+using LabManager.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LabManager
@@ -12,7 +14,7 @@ namespace LabManager
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            
            
             builder.Services.AddSingleton<GreetingService>();
 
@@ -28,7 +30,28 @@ namespace LabManager
                 });
             });
 
+
+            //DB SQL Server configuration
+
+            builder.Services.AddDbContext<LabManagerDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             var app = builder.Build();
+
+            //DB SQL Server connection test
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                LabManagerDbContext dbContext =
+                    scope.ServiceProvider.GetRequiredService<LabManagerDbContext>();
+
+                bool canConnect = dbContext.Database.CanConnect();
+
+                Console.WriteLine($"Database connection: {canConnect}");
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
