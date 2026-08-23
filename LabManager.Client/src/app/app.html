@@ -3,3 +3,15 @@
 <p>My first Angular app.</p>
 
 <p>More text</p>
+
+<h1>Persons</h1>
+
+<p>Number of persons: {{ persons.length }}</p>
+
+<ul>
+  @for (person of persons; track person.id) {
+    <li>
+      {{ person.name }} - {{ person.email }}
+    </li>
+  }
+</ul>
