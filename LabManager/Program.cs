@@ -1,5 +1,6 @@
-using LabManager.Services;
 using LabManager.Data;
+using LabManager.Services;
+using LabManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -31,6 +32,10 @@ namespace LabManager
             });
 
 
+            //Services registration
+
+            builder.Services.AddScoped<IPersonService, PersonService>();
+
             //DB SQL Server configuration
 
             builder.Services.AddDbContext<LabManagerDbContext>(options =>
@@ -41,17 +46,6 @@ namespace LabManager
 
             var app = builder.Build();
 
-            //DB SQL Server connection test
-
-            using (IServiceScope scope = app.Services.CreateScope())
-            {
-                LabManagerDbContext dbContext =
-                    scope.ServiceProvider.GetRequiredService<LabManagerDbContext>();
-
-                bool canConnect = dbContext.Database.CanConnect();
-
-                Console.WriteLine($"Database connection: {canConnect}");
-            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
