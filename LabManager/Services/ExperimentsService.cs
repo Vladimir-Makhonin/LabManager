@@ -3,6 +3,7 @@ using LabManager.Data;
 using LabManager.DTO.Experiment;
 using LabManager.Models;
 using Microsoft.EntityFrameworkCore;
+using LabManager.Exceptions;
 
 namespace LabManager.Services
 {
@@ -36,7 +37,7 @@ namespace LabManager.Services
 
             if (!personExists)
             {
-                throw new ArgumentException(
+                throw new EntityNotFoundException(
                     "The specified person does not exist.");
             }
 
@@ -110,7 +111,7 @@ namespace LabManager.Services
 
             if (!experimentExists)
             {
-                throw new ArgumentException(
+                throw new EntityNotFoundException(
                     "The specified experiment does not exist.");
             }
 
@@ -119,7 +120,7 @@ namespace LabManager.Services
 
             if (!equipmentExists)
             {
-                throw new ArgumentException(
+                throw new EntityNotFoundException(
                     "The specified equipment does not exist.");
             }
 
@@ -130,7 +131,7 @@ namespace LabManager.Services
 
             if (assignmentExists)
             {
-                throw new ArgumentException(
+                throw new DuplicateRelationshipException(
                     "The equipment is already assigned to this experiment.");
             }
 

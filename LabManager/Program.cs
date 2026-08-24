@@ -3,6 +3,7 @@ using LabManager.Data;
 using LabManager.Services;
 using LabManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
+using LabManager.Middleware;
 
 
 namespace LabManager
@@ -45,6 +46,10 @@ namespace LabManager
 
 
            var app = builder.Build();
+
+            // This middleware must appear early so it can catch
+            // exceptions thrown by subsequent middleware and controllers.
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
             // Configure the HTTP request pipeline.
