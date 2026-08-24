@@ -4,6 +4,7 @@ using LabManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LabManager.Migrations
 {
     [DbContext(typeof(LabManagerDbContext))]
-    partial class LabManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260824150857_AddPersonExperimentRelationship")]
+    partial class AddPersonExperimentRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,29 +25,7 @@ namespace LabManager.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("LabManager.Models.Equipment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Equipment");
-                });
-
-            modelBuilder.Entity("LabManager.Models.Experiment", b =>
+            modelBuilder.Entity("Experiment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,19 +51,24 @@ namespace LabManager.Migrations
                     b.ToTable("Experiments");
                 });
 
-            modelBuilder.Entity("LabManager.Models.ExperimentEquipment", b =>
+            modelBuilder.Entity("LabManager.Models.Equipment", b =>
                 {
-                    b.Property<Guid>("ExperimentId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EquipmentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
-                    b.HasKey("ExperimentId", "EquipmentId");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("EquipmentId");
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ExperimentEquipments");
+                    b.HasKey("Id");
+
+                    b.ToTable("Equipment");
                 });
 
             modelBuilder.Entity("Person", b =>
@@ -104,7 +90,7 @@ namespace LabManager.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("LabManager.Models.Experiment", b =>
+            modelBuilder.Entity("Experiment", b =>
                 {
                     b.HasOne("Person", "Person")
                         .WithMany("Experiments")
@@ -113,35 +99,6 @@ namespace LabManager.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("LabManager.Models.ExperimentEquipment", b =>
-                {
-                    b.HasOne("LabManager.Models.Equipment", "Equipment")
-                        .WithMany("ExperimentEquipments")
-                        .HasForeignKey("EquipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LabManager.Models.Experiment", "Experiment")
-                        .WithMany("ExperimentEquipments")
-                        .HasForeignKey("ExperimentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Equipment");
-
-                    b.Navigation("Experiment");
-                });
-
-            modelBuilder.Entity("LabManager.Models.Equipment", b =>
-                {
-                    b.Navigation("ExperimentEquipments");
-                });
-
-            modelBuilder.Entity("LabManager.Models.Experiment", b =>
-                {
-                    b.Navigation("ExperimentEquipments");
                 });
 
             modelBuilder.Entity("Person", b =>

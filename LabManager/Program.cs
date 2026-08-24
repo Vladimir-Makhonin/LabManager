@@ -1,3 +1,4 @@
+using LabManager.Contracts;
 using LabManager.Data;
 using LabManager.Services;
 using LabManager.Services.Contracts;
@@ -18,6 +19,17 @@ namespace LabManager
             
            
             builder.Services.AddSingleton<GreetingService>();
+            builder.Services.AddScoped<IExperimentsService, ExperimentsService>();
+            builder.Services.AddScoped<IPersonService, PersonService>();
+            builder.Services.AddScoped<IEquipmentsService, EquipmentsService>();
+
+            //DB SQL Server configuration
+
+            builder.Services.AddDbContext<LabManagerDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             builder.Services.AddOpenApi();
 
@@ -32,19 +44,7 @@ namespace LabManager
             });
 
 
-            //Services registration
-
-            builder.Services.AddScoped<IPersonService, PersonService>();
-
-            //DB SQL Server configuration
-
-            builder.Services.AddDbContext<LabManagerDbContext>(options =>
-            {
-                options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            var app = builder.Build();
+           var app = builder.Build();
 
 
             // Configure the HTTP request pipeline.
