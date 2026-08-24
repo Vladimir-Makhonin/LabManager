@@ -1,9 +1,14 @@
 using LabManager.Contracts;
 using LabManager.Data;
+using LabManager.Middleware;
+using LabManager.Models;
 using LabManager.Services;
 using LabManager.Services.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using LabManager.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 namespace LabManager
@@ -23,6 +28,7 @@ namespace LabManager
             builder.Services.AddScoped<IExperimentsService, ExperimentsService>();
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IEquipmentsService, EquipmentsService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             //DB SQL Server configuration
 
@@ -31,6 +37,49 @@ namespace LabManager
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+           
+            builder.Services
+                            .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+                            .AddEntityFrameworkStores<LabManagerDbContext>()
+                            .AddDefaultTokenProviders();
+
+            string jwtKey =
+                         builder.Configuration["Jwt:Key"]
+                          ?? throw new InvalidOperationException(
+                         "The JWT key is not configured.");
+
+            builder.Services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme =
+                        JwtBearerDefaults.AuthenticationScheme;
+
+                    options.DefaultChallengeScheme =
+                        JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters =
+                        new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+
+                            ValidIssuer =
+                                builder.Configuration["Jwt:Issuer"],
+
+                            ValidAudience =
+                                builder.Configuration["Jwt:Audience"],
+
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(
+                                    Encoding.UTF8.GetBytes(jwtKey))
+                        };
+                });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddOpenApi();
 
@@ -67,6 +116,8 @@ namespace LabManager
             app.UseHttpsRedirection();
 
             app.UseCors("Angular");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -1,11 +1,13 @@
 ﻿using LabManager.Contracts;
 using LabManager.DTO.Equipment;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LabManager.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EquipmentsController : ControllerBase
     {
         private readonly IEquipmentsService _equipmentsService;

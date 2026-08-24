@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LabManager.Data
 {
-    public class LabManagerDbContext : DbContext
+    public class LabManagerDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public LabManagerDbContext(DbContextOptions<LabManagerDbContext> options)
             : base(options)
