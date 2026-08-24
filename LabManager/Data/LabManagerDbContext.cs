@@ -1,5 +1,7 @@
 ﻿using LabManager.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LabManager.Data
 {
