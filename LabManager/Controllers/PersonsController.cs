@@ -51,21 +51,7 @@ namespace LabManager.Controllers
             return Ok(persons);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<PersonResponse>> UpdatePerson(
-          Guid id,
-          PersonUpdateRequest personUpdateRequest)
-        {
-            PersonResponse? personResponse =
-                await _personService.UpdatePerson(id, personUpdateRequest);
-
-            if (personResponse == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(personResponse);
-        }
+       
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePerson(Guid id)
